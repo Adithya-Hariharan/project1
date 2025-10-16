@@ -154,14 +154,25 @@ def handle_request():
         return jsonify(error_response), 500
 
 
+@app.route("/", methods=["GET"])
+def index():
+    return jsonify({"message": "Welcome to LLM Code Deployment API", "endpoints": ["/api-endpoint (POST)", "/health (GET)"]}), 200
+
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "healthy"}), 200
 
 
+def main():
+    validate_config()
+    config = load_config()
+    port = config["port"]
+    print(f"Starting LLM Code Deployment API on port {port}")
+    print(f"API endpoint: http://localhost:{port}/api-endpoint")
+    app.run(host="0.0.0.0", port=port, debug=True)
+
+
 # Vercel deployment - the app variable is automatically detected
-validate_config()
-config = load_config()
-port = config["port"]
-print(f"Starting LLM Code Deployment API on port {port}")
-print(f"API endpoint: http://localhost:{port}/api-endpoint")
+if __name__ == "__main__":
+    main()
